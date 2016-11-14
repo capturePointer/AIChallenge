@@ -1,3 +1,4 @@
+from scipy.stats import kurtosis, skew, entropy
 from sklearn import svm
 import pyaudio
 import wave
@@ -54,20 +55,21 @@ def read_track(track_name):
 	   stream.write(data)
 	stream.close()
 	p.terminate()
-	freq_sum = 0
-	for frequency in frequencies:
-		freq_sum += frequency
-		print(frequency)
-	mean = freq_sum/len(frequencies)
-	print("meanfreq")
-	print(mean)
-	frequencies = np.array(frequencies)
-	print(np.mean(frequencies))
+	input_data = []
+	input_data.append(np.mean(frequencies))
+	input_data.append(np.std(frequencies))
+	input_data.append(np.median(frequencies))
+	input_data.append(np.percentile(frequencies, 25))
+	input_data.append(np.percentile(frequencies, 75))
+	input_data.append(np.percentile(frequencies, 50))
+	input_data.append(skew(frequencies))
+	input_data.append(kurtosis(frequencies))
+	return input_data
 
 def calculate_input():
 	pass
 
-read_track("100hz.wav")
+print(read_track("100hz.wav"))
 
 x_vars = []
 y_vars = []
@@ -90,10 +92,6 @@ with open('voice.csv', 'rb') as csvfile:
 			#print("female")
 			y_vars.append(1)
 
-"""for row in x_vars:
-	print(row)
-print(y_vars)"""
-
 x_vars = x_vars[1:]
 
 X = [[0, 0], [1, 1]]
@@ -101,9 +99,32 @@ y = [0, 1]
 clf = svm.SVC()
 clf.fit(x_vars, y_vars)
 
-"""SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
-    decision_function_shape=None, degree=3, gamma='auto', kernel='rbf',
-    max_iter=-1, probability=False, random_state=None, shrinking=True,
-    tol=0.001, verbose=False)"""
+"""
+meanfreq: mean frequency (in kHz)
+sd: standard deviation of frequency
+median: median frequency (in kHz)
+Q25: first quantile (in kHz)
+Q75: third quantile (in kHz)
+IQR: interquantile range (in kHz)
+skew: skewness (see note in specprop description)
+kurt: kurtosis (see note in specprop description)
+
+sp.ent: spectral entropy
+sfm: spectral flatness
+mode: mode frequency
+centroid: frequency centroid (see specprop)
+peakf: peak frequency (frequency with highest energy)
+meanfun: average of fundamental frequency measured across acoustic signal
+minfun: minimum fundamental frequency measured across acoustic signal
+maxfun: maximum fundamental frequency measured across acoustic signal
+meandom: average of dominant frequency measured across acoustic signal
+mindom: minimum of dominant frequency measured across acoustic signal
+maxdom: maximum of dominant frequency measured across acoustic signal
+dfrange: range of dominant frequency measured across acoustic signal
+modindx: modulation index. Calculated as the accumulated absolute difference between adjacent measurements of fundamental frequencies divided by the frequency range
+label: male or female
+
+
+"""
 
 print(clf.predict([[0.0597809849598081,0.0642412677031359,0.032026913372582,0.0150714886459209,0.0901934398654331,0.0751219512195122,12.8634618371626,274.402905502067,0.893369416700807,0.491917766397811,0,0.0597809849598081,0.084279106440321,0.0157016683022571,0.275862068965517,0.0078125,0.0078125,0.0078125,0,0]]))
