@@ -13,13 +13,6 @@ import numpy as np
 import csv
 import os
 
-"""
-import rpy2.robjects as robjects
-r_source = robjects.r['source']
-r_source('/path_to_file/myfunc.R')
-r_getname = robjects.globalenv['getname']
-"""
-
 r_source = ro.r['source']
 r_source(os.getcwd() + '/sound.R')
 specan3 = ro.globalenv['specan3']
@@ -38,4 +31,3 @@ def get_file_attributes(filename):
 		if i is not 12:
 			raw_data.append(data[0])
 	return raw_data
-	#print(raw_data)
