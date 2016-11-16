@@ -1,3 +1,9 @@
+import os
+modulePath =  os.getcwd() + '/src/'
+print(modulePath)
+import sys
+sys.path.append(modulePath)
+import dspUtil
 from scipy.stats import kurtosis, skew, entropy
 from sklearn import svm
 import pyaudio
@@ -55,6 +61,7 @@ def read_track(track_name):
 	   stream.write(data)
 	stream.close()
 	p.terminate()
+	frequencies = np.array(frequencies)
 	input_data = []
 	input_data.append(np.mean(frequencies))
 	input_data.append(np.std(frequencies))
@@ -64,6 +71,8 @@ def read_track(track_name):
 	input_data.append(np.percentile(frequencies, 50))
 	input_data.append(skew(frequencies))
 	input_data.append(kurtosis(frequencies))
+	input_data.append(dspUtil.calculateSpectralFlatness(frequencies))
+	input_data.append(dspUtil.calculateSpectralFlatness(frequencies))
 	return input_data
 
 def calculate_input():
@@ -74,23 +83,24 @@ print(read_track("100hz.wav"))
 x_vars = []
 y_vars = []
 
-with open('voice.csv', 'rb') as csvfile:
-	spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
-	for row in spamreader:
-		#print ', '.join(row)
-		row_list = row[0].strip(" \"")
-		row_list = row_list.replace("\"" , "")
-		row_list = row_list.split(",")
-		x_vars.append(row_list[:len(row_list) - 1])
-		#print(row_list[len(row_list) - 1])
-		gender = str(row_list[len(row_list) - 1])
-		#print(gender)
-		if gender == "male":
-			#print("male")
-			y_vars.append(0)
-		elif gender == "female":
-			#print("female")
-			y_vars.append(1)
+def read_data():
+	with open('voice.csv', 'rb') as csvfile:
+		spamreader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+		for row in spamreader:
+			#print ', '.join(row)
+			row_list = row[0].strip(" \"")
+			row_list = row_list.replace("\"" , "")
+			row_list = row_list.split(",")
+			x_vars.append(row_list[:len(row_list) - 1])
+			#print(row_list[len(row_list) - 1])
+			gender = str(row_list[len(row_list) - 1])
+			#print(gender)
+			if gender == "male":
+				#print("male")
+				y_vars.append(0)
+			elif gender == "female":
+				#print("female")
+				y_vars.append(1)
 
 x_vars = x_vars[1:]
 
@@ -110,7 +120,9 @@ skew: skewness (see note in specprop description)
 kurt: kurtosis (see note in specprop description)
 
 sp.ent: spectral entropy
+
 sfm: spectral flatness
+
 mode: mode frequency
 centroid: frequency centroid (see specprop)
 peakf: peak frequency (frequency with highest energy)
