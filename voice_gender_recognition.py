@@ -25,16 +25,16 @@ def read_track(track_name):
 	data = wf.readframes(chunk)
 	# play stream and find the frequency of each chunk
 	while len(data) == chunk*swidth:
-	    # write data out to the audio stream
+	   # write data out to the audio stream
 	   stream.write(data)
-	    # unpack the data and times by the hamming window
+	   # unpack the data and times by the hamming window
 	   indata = np.array(wave.struct.unpack("%dh"%(len(data)/swidth),\
 	                                         data))*window
-	    # Take the fft and square each value
+	   # Take the fft and square each value
 	   fftData=abs(np.fft.rfft(indata))**2
-	    # find the maximum
+	   # find the maximum
 	   which = fftData[1:].argmax() + 1
-	    # use quadratic interpolation around the max
+	   # use quadratic interpolation around the max
 	   if which != len(fftData)-1:
 	      y0,y1,y2 = np.log(fftData[which-1:which+2:])
 	      x1 = (y2 - y0) * .5 / (2 * y1 - y2 - y0)
@@ -123,8 +123,13 @@ maxdom: maximum of dominant frequency measured across acoustic signal
 dfrange: range of dominant frequency measured across acoustic signal
 modindx: modulation index. Calculated as the accumulated absolute difference between adjacent measurements of fundamental frequencies divided by the frequency range
 label: male or female
-
-
 """
 
 print(clf.predict([[0.0597809849598081,0.0642412677031359,0.032026913372582,0.0150714886459209,0.0901934398654331,0.0751219512195122,12.8634618371626,274.402905502067,0.893369416700807,0.491917766397811,0,0.0597809849598081,0.084279106440321,0.0157016683022571,0.275862068965517,0.0078125,0.0078125,0.0078125,0,0]]))
+
+
+
+
+
+
+
