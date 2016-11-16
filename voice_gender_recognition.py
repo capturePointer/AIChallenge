@@ -5,6 +5,7 @@ import pyaudio
 import wave
 import numpy as np
 import csv
+import math
 
 def read_track(track_name):
 	frequencies = []
@@ -43,7 +44,8 @@ def read_track(track_name):
 	      thefreq = (which+x1)*RATE/chunk
 	      print "The freq is %f Hz." % (thefreq)
 	      khz = thefreq/1000
-	      frequencies.append(khz)
+	      if not math.isnan(khz):
+	      	frequencies.append(khz)
 	      segs = 0.05*60
 	      #print(khz/segs)
 	   else:
@@ -66,12 +68,12 @@ def read_track(track_name):
 	input_data.append(np.percentile(frequencies, 50))
 	input_data.append(skew(frequencies))
 	input_data.append(kurtosis(frequencies))
-	input_data.append(dspUtil.calculateSpectralFlatness(frequencies))
-	input_data.append(dspUtil.calculateSpectralFlatness(frequencies))
 	return input_data
 
 def calculate_input():
 	pass
+
+print(read_track("woman_voice.wav"))
 
 x_vars = []
 y_vars = []
@@ -97,9 +99,17 @@ x_vars = x_vars[1:]
 clf = svm.SVC()
 clf.fit(x_vars, y_vars)
 
-song_attributes = get_file_attributes("100hz.wav")
-
 print(clf.predict([[0.0597809849598081,0.0642412677031359,0.032026913372582,0.0150714886459209,0.0901934398654331,0.0751219512195122,12.8634618371626,274.402905502067,0.893369416700807,0.491917766397811,0,0.0597809849598081,0.084279106440321,0.0157016683022571,0.275862068965517,0.0078125,0.0078125,0.0078125,0,0]]))
+song_attributes = get_file_attributes("lana.wav")
+print(song_attributes)
+print(clf.predict([song_attributes]))
+
+song_attributes = get_file_attributes("woman_voice.wav")
+print(song_attributes)
+print(clf.predict([song_attributes]))
+
+song_attributes = get_file_attributes("audio.wav")
+print(song_attributes)
 print(clf.predict([song_attributes]))
 
 
