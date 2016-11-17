@@ -1,7 +1,6 @@
 from scipy.stats import kurtosis, skew, entropy
 from sklearn import svm, tree
 from audio_processing import get_file_attributes
-import Tkinter
 import pyaudio
 import wave
 import numpy as np
