@@ -3,10 +3,6 @@ from sklearn.ensemble import RandomForestRegressor
 import numpy as np
 import csv
 
-
-boston = load_boston()
-
-
 x_vars = []
 y_vars = []
 
