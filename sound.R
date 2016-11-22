@@ -1,3 +1,4 @@
+# Code taken from https://github.com/primaryobjects/voice-gender/blob/master/sound.R
 packages <- c('tuneR', 'seewave', 'fftw', 'caTools', 'randomForest', 'warbleR', 'mice', 'e1071', 'xgboost', 'e1071')
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())))  

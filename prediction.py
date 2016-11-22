@@ -58,6 +58,8 @@ def classify(label_text, filename, mainframe, local):
 	else:
 		x = "Female"
 	label_text.set(x)
+	classify_svm(label_text, filename, mainframe, local)
+	classify_rfc(label_text, filename, mainframe, local)
 	mainframe.update_idletasks()
 
 def classify_svm(label_text, filename, mainframe, local):
@@ -67,6 +69,21 @@ def classify_svm(label_text, filename, mainframe, local):
 	else:
 		attributes = get_file_attributes(filename)
 	x = svc.predict([attributes])
+	if x == [0]:
+		x = "Male"
+	else:
+		x = "Female"
+	label_text.set(x)
+	print(x)
+	mainframe.update_idletasks()
+
+def classify_rfc(label_text, filename, mainframe, local):
+	rfc = get_model('voice_recognition_rfc.pkl')
+	if local is False:
+		attributes = get_file_attributes(filename.get())
+	else:
+		attributes = get_file_attributes(filename)
+	x = rfc.predict([attributes])
 	if x == [0]:
 		x = "Male"
 	else:

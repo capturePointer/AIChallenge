@@ -1,5 +1,6 @@
 from scipy.stats import kurtosis, skew, entropy
 from sklearn import svm, tree
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from audio_processing import get_file_attributes
 import pyaudio
 import wave
@@ -24,11 +25,13 @@ def read_data(training_data):
 				y_vars.append(0)
 			elif gender == "female":
 				y_vars.append(1)
+		names = x_vars[0]
 		x_vars = x_vars[1:]
 		x_vars = np.array(x_vars)
 		y_vars = np.array(y_vars)
 		variables['x_vars'] = x_vars
 		variables['y_vars'] = y_vars
+		variables['names'] = names
 		return variables
 
 def train_dtc(variables):
@@ -42,6 +45,11 @@ def train_svm(variables):
 	svc.fit(variables['x_vars'], variables['y_vars'])
 	return svc
 
+def train_rfc(variables):
+	rfc = RandomForestClassifier()
+	rfc.fit(variables['x_vars'], variables['y_vars'])
+	return rfc
+
 if __name__ == "__main__":
 	variables = read_data('voice.csv')
 	clf = train_dtc(variables)
@@ -49,5 +57,12 @@ if __name__ == "__main__":
 		cPickle.dump(clf, fid)
 	svm = train_svm(variables)
 	with open('voice_recognition_svm.pkl', 'wb') as fid:
-		cPickle.dump(clf, fid)
+		cPickle.dump(svm, fid)
+	rfc = train_rfc(variables)
+	with open('voice_recognition_rfc.pkl', 'wb') as fid:
+		cPickle.dump(rfc, fid)
+	print "Features sorted by their score:"
+	print sorted(zip(map(lambda x: round(x, 4), rfc.feature_importances_), variables['names']), 
+	             reverse=True)
+
 
