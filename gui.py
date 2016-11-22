@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from Tkinter import *
-from pygame import mixer
-from pygame.mixer import music
 from prediction import get_model, get_file_attributes, classify, play_sample, record_and_classify
 import ttk
 

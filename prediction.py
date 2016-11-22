@@ -60,6 +60,21 @@ def classify(label_text, filename, mainframe, local):
 	label_text.set(x)
 	mainframe.update_idletasks()
 
+def classify_svm(label_text, filename, mainframe, local):
+	svc = get_model('voice_recognition_svm.pkl')
+	if local is False:
+		attributes = get_file_attributes(filename.get())
+	else:
+		attributes = get_file_attributes(filename)
+	x = svc.predict([attributes])
+	if x == [0]:
+		x = "Male"
+	else:
+		x = "Female"
+	label_text.set(x)
+	print(x)
+	mainframe.update_idletasks()
+
 def record_and_classify(label_text, mainframe, local):
 	FORMAT = pyaudio.paInt16
 	CHANNELS = 2

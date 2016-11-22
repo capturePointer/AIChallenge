@@ -31,19 +31,23 @@ def read_data(training_data):
 		variables['y_vars'] = y_vars
 		return variables
 
-def train_model(variables):
+def train_dtc(variables):
 	clf = tree.DecisionTreeClassifier()
 	clf.fit(variables['x_vars'], variables['y_vars'])
 	return clf
 
+def train_svm(variables):
+	svc = svm.SVC(C=1.0, kernel='linear', degree=3, gamma='auto', coef0=0.0, shrinking=True, probability=False, tol=0.001, \
+		cache_size=200, class_weight=None, verbose=False, max_iter=-1, decision_function_shape=None, random_state=None)
+	svc.fit(variables['x_vars'], variables['y_vars'])
+	return svc
+
 if __name__ == "__main__":
 	variables = read_data('voice.csv')
-	clf = train_model(variables)
+	clf = train_dtc(variables)
 	with open('voice_recognition.pkl', 'wb') as fid:
 		cPickle.dump(clf, fid)
-
-
-
-
-
+	svm = train_svm(variables)
+	with open('voice_recognition_svm.pkl', 'wb') as fid:
+		cPickle.dump(clf, fid)
 
