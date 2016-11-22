@@ -50,6 +50,11 @@ def train_rfc(variables):
 	rfc.fit(variables['x_vars'], variables['y_vars'])
 	return rfc
 
+def get_feature_importances(rfc, variables):
+	print "Features sorted by their score:"
+	print sorted(zip(map(lambda x: round(x, 4), rfc.feature_importances_), variables['names']), 
+	             reverse=True)
+
 if __name__ == "__main__":
 	variables = read_data('voice.csv')
 	clf = train_dtc(variables)
@@ -61,8 +66,4 @@ if __name__ == "__main__":
 	rfc = train_rfc(variables)
 	with open('voice_recognition_rfc.pkl', 'wb') as fid:
 		cPickle.dump(rfc, fid)
-	print "Features sorted by their score:"
-	print sorted(zip(map(lambda x: round(x, 4), rfc.feature_importances_), variables['names']), 
-	             reverse=True)
-
-
+	get_feature_importances(rfc, variables)
