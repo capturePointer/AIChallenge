@@ -29,7 +29,7 @@ def get_file_attributes(filename):
 	x = specan3(inp, bp = ro.IntVector((0,22)), wl = 2048, threshold = 5, parallel = 1)
 	data_list = x[3:]
 	raw_data = []
-	print(x)
+	#print(x)
 	for (i, data) in enumerate(data_list):
 		if i is not 12:
 			raw_data.append(data[0])
@@ -41,12 +41,16 @@ def get_model(model_name):
 	return clf
 
 def play_sample(filename):
-	print("Playing " + filename)
 	mixer.init()
 	music.load(filename)
 	music.play(0)
 
-def classify(label_text, filename, mainframe, local):
+def classify(dtc, svm, rfc, filename, mainframe, local):
+	classify_dtc(dtc, filename, mainframe, local)
+	classify_svm(svm, filename, mainframe, local)
+	classify_rfc(rfc, filename, mainframe, local)
+
+def classify_dtc(label_text, filename, mainframe, local):
 	clf = get_model('voice_recognition.pkl')
 	if local is False:
 		attributes = get_file_attributes(filename.get())
@@ -58,8 +62,6 @@ def classify(label_text, filename, mainframe, local):
 	else:
 		x = "Female"
 	label_text.set(x)
-	classify_svm(label_text, filename, mainframe, local)
-	classify_rfc(label_text, filename, mainframe, local)
 	mainframe.update_idletasks()
 
 def classify_svm(label_text, filename, mainframe, local):
@@ -74,7 +76,6 @@ def classify_svm(label_text, filename, mainframe, local):
 	else:
 		x = "Female"
 	label_text.set(x)
-	print(x)
 	mainframe.update_idletasks()
 
 def classify_rfc(label_text, filename, mainframe, local):
@@ -89,10 +90,9 @@ def classify_rfc(label_text, filename, mainframe, local):
 	else:
 		x = "Female"
 	label_text.set(x)
-	print(x)
 	mainframe.update_idletasks()
 
-def record_and_classify(label_text, mainframe, local):
+def record_and_classify(dtc, svm, rfc, mainframe, local):
 	FORMAT = pyaudio.paInt16
 	CHANNELS = 2
 	RATE = 44100
@@ -118,4 +118,4 @@ def record_and_classify(label_text, mainframe, local):
 	waveFile.setframerate(RATE)
 	waveFile.writeframes(b''.join(frames))
 	waveFile.close()
-	classify(label_text, 'file.wav', mainframe, local)
+	classify(dtc, svm, rfc, 'file.wav', mainframe, local)
