@@ -1,5 +1,5 @@
 from sklearn.datasets import load_boston
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 import numpy as np
 import csv
 
@@ -24,7 +24,7 @@ x_vars = x_vars[1:]
 X = x_vars
 Y = y_vars
 
-rf = RandomForestRegressor()
+rf = RandomForestClassifier()
 rf.fit(X, Y)
 
 print "Features sorted by their score:"
