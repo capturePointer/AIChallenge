@@ -92,6 +92,7 @@ def classify_rfc(label_text, filename, mainframe, local):
 	mainframe.update_idletasks()
 
 def record_and_classify(dtc, svm, rfc, mainframe, local):
+	# Code taken from https://gist.github.com/mabdrabo/8678538
 	FORMAT = pyaudio.paInt16
 	CHANNELS = 2
 	RATE = 44100
