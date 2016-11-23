@@ -29,7 +29,6 @@ def get_file_attributes(filename):
 	x = specan3(inp, bp = ro.IntVector((0,22)), wl = 2048, threshold = 5, parallel = 1)
 	data_list = x[3:]
 	raw_data = []
-	#print(x)
 	for (i, data) in enumerate(data_list):
 		if i is not 12:
 			raw_data.append(data[0])
