@@ -1,0 +1,9 @@
+scipy
+numpy
+sklearn
+pygame
+cPickle
+pyaudio
+wave
+rpy2
+pandas

@@ -58,7 +58,7 @@ def classify_dtc(label_text, filename, mainframe, local):
 	x = clf.predict([attributes])
 	if x == [0]:
 		x = "Male"
-	else:
+	elif x == [1]:
 		x = "Female"
 	label_text.set(x)
 	mainframe.update_idletasks()
@@ -72,7 +72,7 @@ def classify_svm(label_text, filename, mainframe, local):
 	x = svc.predict([attributes])
 	if x == [0]:
 		x = "Male"
-	else:
+	elif x == [1]:
 		x = "Female"
 	label_text.set(x)
 	mainframe.update_idletasks()
@@ -86,7 +86,7 @@ def classify_rfc(label_text, filename, mainframe, local):
 	x = rfc.predict([attributes])
 	if x == [0]:
 		x = "Male"
-	else:
+	elif x == [1]:
 		x = "Female"
 	label_text.set(x)
 	mainframe.update_idletasks()
